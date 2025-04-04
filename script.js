@@ -1,20 +1,17 @@
-// ตัวแปรสำหรับ Google Sheets API URL
-const sheetId = '1-1CvXEzgeU6iO_NoQpL0lWmTI3DSEGaC2KOILsvetnU';  // ใส่ ID ของ Google Sheets ของคุณ
-const apiKey = 'AIzaSyCPRT9U_a8PTWEzYqTc56ZadodxNaSYDds';    // ใส่ API Key ที่คุณได้จาก Google Cloud Console
-const range = 'Sheet1!A1:E6';   // ระบุช่วงข้อมูลที่ต้องการดึง (เช่น A1:D10)
+const sheetId = '1-1CvXEzgeU6iO_NoQpL0lWmTI3DSEGaC2KOILsvetnU';
+const apiKey = 'AIzaSyCPRT9U_a8PTWEzYqTc56ZadodxNaSYDds';
+const range = 'Sheet1!A1:E100';
 
 function loadData() {
-    const trackId = document.getElementById("trackId").value.trim();
-    if (!trackId) {
-      alert("กรุณากรอกหมายเลขติดตาม");
-      return;
-    }
+  const trackId = document.getElementById("trackId").value.trim();
+  if (!trackId) {
+    alert("กรุณากรอกหมายเลขติดตาม");
+    return;
+  }
 
-  // ดึงข้อมูลจาก Google Sheets
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
-    // ใส่ API Key ที่คุณได้จาก Google Cloud Console
 
-    fetch(url)
+  fetch(url)
     .then(response => response.json())
     .then(data => {
       const values = data.values || [];
@@ -33,18 +30,17 @@ function loadData() {
 }
 
 function drawTimeline(data) {
-    const container = document.getElementById("timeline");
-    container.innerHTML = "";
-  
-    data.forEach(entry => {
-      const div = document.createElement("div");
-      div.className = "card";
-      div.innerHTML = `
-        <div class="date"><strong>วันที่:</strong> ${entry[1]}</div>
-        <div class="status"><strong>สถานะ:</strong> ${entry[2]}</div>
-        <div class="note"><strong>หมายเหตุ:</strong> ${entry[3]}</div>
-        <hr>
-      `;
-      container.appendChild(div);
-    });
-  }
+  const container = document.getElementById("timeline");
+  container.innerHTML = "";
+
+  data.forEach(entry => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `
+      <div class="date">${entry[1]}</div>
+      <div class="status"><strong>สถานะ:</strong> ${entry[2]}</div>
+      <div class="note"><strong>หมายเหตุ:</strong> ${entry[3]}</div>
+    `;
+    container.appendChild(div);
+  });
+}
