@@ -1,7 +1,6 @@
-
 const sheetId = '1-1CvXEzgeU6iO_NoQpL0lWmTI3DSEGaC2KOILsvetnU';
 const apiKey = 'AIzaSyCPRT9U_a8PTWEzYqTc56ZadodxNaSYDds';
-const range = 'Sheet1!A1:U1000';
+const range = 'Sheet1!A1:U1000'; // ช่วงข้อมูลที่ต้องการดึง
 
 function loadData() {
   const trackId = document.getElementById("trackId").value.trim();
@@ -10,35 +9,56 @@ function loadData() {
     return;
   }
 
+  // สร้าง URL สำหรับดึงข้อมูลจาก Google Sheets API
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
+  // เริ่มทำการดึงข้อมูลจาก API
   fetch(url)
     .then(response => response.json())
     .then(data => {
-      const values = data.values || [];
-      const filtered = values.filter(row => (row[0] || "").trim() === trackId);
-      if (filtered.length === 0) {
-        document.getElementById("timeline").innerHTML = "<p class='text-danger text-center'>ไม่พบข้อมูล</p>";
+      // ตรวจสอบว่าเราได้รับค่าจาก API หรือไม่
+      if (!data.values) {
+        console.error("ไม่พบข้อมูลจาก Google Sheets");
+        document.getElementById("timeline").innerHTML = "<p class='text-danger text-center'>ไม่พบข้อมูลจาก Google Sheets</p>";
         return;
       }
+
+      const values = data.values || [];
+      console.log("ข้อมูลที่ดึงมา:", values); // ตรวจสอบข้อมูลที่ดึงมา
+
+      // กรองข้อมูลตาม trackId
+      const filtered = values.filter(row => (row[1] || "").trim() === trackId);
+      if (filtered.length === 0) {
+        document.getElementById("timeline").innerHTML = "<p class='text-danger text-center'>ไม่พบข้อมูลที่ตรงกับหมายเลขบัตร ปชช.</p>";
+        return;
+      }
+
+      // เรียกใช้ฟังก์ชันเพื่อวาด Timeline
       drawTimeline(filtered);
     })
     .catch(error => {
-      console.error("เกิดข้อผิดพลาด:", error);
+      console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
+      document.getElementById("timeline").innerHTML = "<p class='text-danger text-center'>เกิดข้อผิดพลาดในการดึงข้อมูล</p>";
     });
 }
 
 function drawTimeline(data) {
   const container = document.getElementById("timeline");
-  container.innerHTML = "";
+  container.innerHTML = ""; // เคลียร์ข้อมูลเก่า
 
+  // วนลูปเพื่อแสดงข้อมูล
   data.forEach(entry => {
+    // ตรวจสอบค่าที่ดึงมาว่ามีคอลัมน์ที่ต้องการหรือไม่
+    const date = entry[7] || "ไม่ระบุ";
+    const status = entry[5] || "ไม่ระบุ";
+    const note = entry[17] || "ไม่ระบุ";
+
     const html = `
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title text-primary">📅 วันที่: ${entry[7]}</h5>
-          <p class="card-text">สถานะ: ${entry[5]}</p>
-          <p class="card-text text-muted">หมายเหตุ: ${entry[17]}</p>
+          <h5 class="card-title text-primary">📅 วันที่: ${date}</h5>
+          <p class="card-text">สถานะ: ${status}</p>
+          <p class="card-text text-muted">หมายเหตุ: ${note}</p>
         </div>
       </div>`;
     container.innerHTML += html;
