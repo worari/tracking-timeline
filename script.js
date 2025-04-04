@@ -12,7 +12,8 @@ function loadData() {
   }
 
   // ดึงข้อมูลจาก Google Sheets
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${const apiKey = 'AIzaSyCPRT9U_a8PTWEzYqTc56ZadodxNaSYDds';    // ใส่ API Key ที่คุณได้จาก Google Cloud Console
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${1-1CvXEzgeU6iO_NoQpL0lWmTI3DSEGaC2KOILsvetnU}/values/${Sheet1!A1:E6}?key=${AIzaSyCPRT9U_a8PTWEzYqTc56ZadodxNaSYDdsapiKey}`;
+    // ใส่ API Key ที่คุณได้จาก Google Cloud Console
   }`;
 
   fetch(url)
