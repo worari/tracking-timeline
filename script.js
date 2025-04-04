@@ -6,7 +6,7 @@ const range = 'Sheet1!A1:E100';
 function loadData() {
   const trackId = document.getElementById("trackId").value.trim();
   if (!trackId) {
-    alert("กรุณากรอกหมายเลขติดตาม");
+    alert("กรุณากรอกหมายเลขบัตร ปชช.");
     return;
   }
 
@@ -16,7 +16,7 @@ function loadData() {
     .then(response => response.json())
     .then(data => {
       const values = data.values || [];
-      const filtered = values.filter(row => (row[0] || "").trim() === trackId);
+      const filtered = values.filter(row => (row[1] || "").trim() === trackId);
       if (filtered.length === 0) {
         document.getElementById("timeline").innerHTML = "<p class='text-danger text-center'>ไม่พบข้อมูล</p>";
         return;
@@ -36,9 +36,9 @@ function drawTimeline(data) {
     const html = `
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title text-primary">📅 วันที่: ${entry[1]}</h5>
-          <p class="card-text">สถานะ: ${entry[2]}</p>
-          <p class="card-text text-muted">หมายเหตุ: ${entry[3]}</p>
+          <h5 class="card-title text-primary">📅 วันที่: ${entry[8]}</h5>
+          <p class="card-text">สถานะ: ${entry[15]}</p>
+          <p class="card-text text-muted">หมายเหตุ: ${entry[17]}</p>
         </div>
       </div>`;
     container.innerHTML += html;
