@@ -1,3 +1,4 @@
+
 const sheetId = '1-1CvXEzgeU6iO_NoQpL0lWmTI3DSEGaC2KOILsvetnU';
 const apiKey = 'AIzaSyCPRT9U_a8PTWEzYqTc56ZadodxNaSYDds';
 const range = 'Sheet1!A1:U1000';
@@ -14,134 +15,76 @@ function loadData() {
   fetch(url)
     .then(response => response.json())
     .then(data => {
-      if (!data.values) {
-        document.getElementById("timeline").innerHTML = "<p class='text-danger'>ไม่พบข้อมูล</p>";
+      const values = data.values || [];
+      const headers = values[0];
+      const records = values.slice(1);
+      const filtered = records.filter(row => (row[1] || "").trim() === trackId);
+
+      if (filtered.length === 0) {
+        document.getElementById("timeline").innerHTML = "<p class='text-danger'>ไม่พบข้อมูลที่ตรงกับหมายเลขติดตาม</p>";
         return;
       }
 
-      const headers = data.values[0];
-      const rows = data.values.slice(1);
-      const matched = rows.filter(row => (row[1] || "").trim() === trackId);
-
-      if (matched.length === 0) {
-        document.getElementById("timeline").innerHTML = "<p class='text-danger'>ไม่พบข้อมูล</p>";
-        return;
-      }
-
-      drawTimeline(matched);
+      const userName = filtered[0][2] || "ผู้ใช้งาน";
+      speakName(userName);
+      generateQRCode(trackId);
+      drawTimeline(filtered);
     })
     .catch(error => {
-      console.error("Error:", error);
-      document.getElementById("timeline").innerHTML = "<p class='text-danger'>เกิดข้อผิดพลาดในการดึงข้อมูล</p>";
+      console.error("เกิดข้อผิดพลาด:", error);
     });
 }
 
 function drawTimeline(data) {
   const container = document.getElementById("timeline");
-  container.innerHTML = '<div class="timeline"></div>';
-  const timeline = container.querySelector(".timeline");
-
+  container.innerHTML = "";
   data.forEach(entry => {
-    const inDate = entry[4] || "ไม่ระบุ";
-    const inDept = entry[2] || "ไม่ระบุ";
-    const inLetter = entry[3] || "-";
-    const status = entry[5] || "รอดำเนินการ";
-
-    const outDate = entry[6] || null;
-    const outLetter = entry[7] || null;
-    const outTo = entry[8] || null;
-    const result = entry[9] || null;
+    const dateIn = entry[7] || "ไม่ระบุ";
+    const dept = entry[4] || "ไม่ระบุหน่วย";
+    const docIn = entry[6] || "-";
+    const status = entry[8] || "-";
+    const dateOut = entry[10] || "-";
+    const docOut = entry[11] || "-";
+    const sentTo = entry[12] || "-";
+    const result = entry[13] || "-";
 
     const html = `
-      <div class="timeline-item">
-        <div class="timeline-icon"><i class="bi bi-upload"></i></div>
-        <div class="timeline-content">
-          <h5 class="fw-bold">📥 วันที่รับเรื่อง: ${inDate}</h5>
-          <p>หน่วยงาน: ${inDept}<br>เลขหนังสือเข้า: ${inLetter}</p>
-          <span class="badge bg-info">สถานะ: ${status}</span>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-primary">📥 วันที่รับเรื่อง: ${dateIn}</h5>
+          <p>หน่วยงาน: ${dept}</p>
+          <p>เลขหนังสือเข้า: ${docIn}</p>
+          <p><strong>สถานะ:</strong> ${status}</p>
+          <hr>
+          <h5 class="card-title text-success">📤 วันที่หนังสือออก: ${dateOut}</h5>
+          <p>เลขหนังสือออก: ${docOut}</p>
+          <p>ส่งเรื่องให้: ${sentTo}</p>
+          <p>ผลพิจารณา: ${result}</p>
         </div>
-      </div>
-      ${outDate ? `
-      <div class="timeline-item">
-        <div class="timeline-icon bg-success"><i class="bi bi-send-check"></i></div>
-        <div class="timeline-content">
-          <h5 class="fw-bold">📤 วันที่หนังสือออก: ${outDate}</h5>
-          <p>เลขหนังสือออก: ${outLetter}<br>ส่งให้หน่วย: ${outTo}</p>
-          <span class="badge bg-success">ผลพิจารณา: ${result}</span>
-        </div>
-      </div>
-      ` : ''}
-    `;
-    timeline.innerHTML += html;
+      </div>`;
+
+    container.innerHTML += html;
   });
 }
 
-function speak(text) {
-  const synth = window.speechSynthesis;
-  if (synth) {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'th-TH'; // ภาษาไทย
-    synth.speak(utter);
-  }
+function speakName(name) {
+  const msg = new SpeechSynthesisUtterance("ชื่อผู้ใช้: " + name);
+  msg.lang = "th-TH";
+  window.speechSynthesis.speak(msg);
 }
 
-function drawTimeline(data) {
-  const container = document.getElementById("timeline");
-  container.innerHTML = '<div class="timeline" id="timelineContent"></div>';
-  const timeline = container.querySelector(".timeline");
-
-  data.forEach(entry => {
-    const inDate = entry[4] || "ไม่ระบุ";
-    const inDept = entry[2] || "ไม่ระบุ";
-    const inLetter = entry[3] || "-";
-    const status = entry[5] || "รอดำเนินการ";
-
-    const outDate = entry[6] || null;
-    const outLetter = entry[7] || null;
-    const outTo = entry[8] || null;
-    const result = entry[9] || null;
-
-    const html = `
-      <div class="timeline-item">
-        <div class="timeline-icon"><i class="bi bi-upload"></i></div>
-        <div class="timeline-content">
-          <h5 class="fw-bold">📥 วันที่รับเรื่อง: ${inDate}</h5>
-          <p>หน่วยงาน: ${inDept}<br>เลขหนังสือเข้า: ${inLetter}</p>
-          <span class="badge bg-info">สถานะ: ${status}</span>
-        </div>
-      </div>
-      ${outDate ? `
-      <div class="timeline-item">
-        <div class="timeline-icon bg-success"><i class="bi bi-send-check"></i></div>
-        <div class="timeline-content">
-          <h5 class="fw-bold">📤 วันที่หนังสือออก: ${outDate}</h5>
-          <p>เลขหนังสือออก: ${outLetter}<br>ส่งให้หน่วย: ${outTo}</p>
-          <span class="badge bg-success">ผลพิจารณา: ${result}</span>
-        </div>
-      </div>
-      ` : ''}
-    `;
-    timeline.innerHTML += html;
+function generateQRCode(trackId) {
+  const qrcodeContainer = document.getElementById("qrcode");
+  qrcodeContainer.innerHTML = "";
+  new QRCode(qrcodeContainer, {
+    text: `หมายเลขติดตาม: ${trackId}`,
+    width: 128,
+    height: 128,
   });
-
-  // 🔊 พูดเมื่อโหลดสำเร็จ
-  speak("พบข้อมูลแล้ว กรุณาตรวจสอบ");
-}
-function downloadPDF() {
-  const element = document.getElementById("timelineContent");
-  if (!element) {
-    alert("กรุณาค้นหาก่อนดาวน์โหลด");
-    return;
-  }
-
-  const opt = {
-    margin:       0.5,
-    filename:     'timeline.pdf',
-    image:        { type: 'jpeg', quality: 0.98 },
-    html2canvas:  { scale: 2 },
-    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-  };
-
-  html2pdf().set(opt).from(element).save();
 }
 
+function exportExcel() {
+  const table = document.getElementById("timeline");
+  const wb = XLSX.utils.table_to_book(table, { sheet: "TrackingData" });
+  XLSX.writeFile(wb, "tracking_result.xlsx");
+}
