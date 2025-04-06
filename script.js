@@ -61,6 +61,26 @@ function drawTimeline(data) {
           <p class="card-text text-muted">หมายเหตุ: ${note}</p>
         </div>
       </div>`;
+
+    const cardHtml = `
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="text-primary">📥 วันที่รับเรื่อง: ${field["วันที่หนังสือเข้า"] || "-"}</h5>
+          <p><strong>หน่วยเจ้าของเรื่อง:</strong> ${field["หน่วยเจ้าของเรื่อง"] || "-"}</p>
+          <p><strong>เลขหนังสือเข้า:</strong> ${field["เลขหนังสือเข้า"] || "-"}</p>
+          <p><strong>สถานะ:</strong> รับเรื่องแล้ว</p>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="text-success">📤 วันที่หนังสือออก: ${field["วันที่หนังสือออก"] || "-"}</h5>
+          <p><strong>เลขหนังสือ:</strong> ${field["เลขหนังสือ"] || "-"}</p>
+          <p><strong>ส่งเรื่องให้หน่วย:</strong> ${field["ส่งเรื่องให้หน่วย"] || "-"}</p>
+          <p><strong>ผลพิจารณา:</strong> ${field["ผลพิจารณา"] || "-"}</p>
+        </div>
+      </div>
+    `;
     container.innerHTML += html;
   });
 }
