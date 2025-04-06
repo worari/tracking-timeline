@@ -87,12 +87,12 @@ function drawTimeline(data) {
           <p class="card-text"><strong>เลขที่หนังสือเข้า:</strong> ${docNoIn}</p>
           <p class="card-text"><strong>สถานะ:</strong> ${status}</p>
           <hr>
-          <h5 class="card-title text-success">📤 วันที่ตอบหนังสือออก: ${dateOut}</h5>
+          <h5 class="card-title text-secondary">📤 วันที่ตอบหนังสือออก: ${dateOut}</h5>
           <p class="card-text"><strong>เลขที่หนังสือออก:</strong> ${docNoOut}</p>
           <p class="card-text"><strong>ส่งเรื่องให้หน่วย:</strong> ${toDept}</p>
           <p class="card-text"><strong>ผลพิจารณา:</strong> ${result}</p>
           <hr>
-          <h5 class="card-title text-primary">📤 ได้ตรวจสอบเวลาราชการแล้วขอรับรองว่า: ${ranks} ${fname} ${lname}</h5>
+          <h5 class="card-title text-success">📤 ได้ตรวจสอบเวลาราชการแล้วขอรับรองว่า: ${ranks} ${fname} ${lname}</h5>
           <p class="card-text"><strong>ขึ้นทะเบียนทหารกองประจำการเมื่อ:</strong> ${ativedate}</p>
           <p class="card-text"><strong>เข้ารับราชการเมื่อ:</strong> ${ative1}</p>
           <p class="card-text"><strong>ออกจากราชการเมื่อ:</strong> ${release}</p>
