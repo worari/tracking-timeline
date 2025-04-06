@@ -52,7 +52,8 @@ function drawTimeline(data, headers) {
           <h5 class="text-primary">📥 วันที่รับเรื่อง: ${field["วันที่หนังสือเข้า"] || "-"}</h5>
           <p><strong>หน่วยเจ้าของเรื่อง:</strong> ${field["หน่วยเจ้าของเรื่อง"] || "-"}</p>
           <p><strong>เลขหนังสือเข้า:</strong> ${field["เลขหนังสือเข้า"] || "-"}</p>
-          <p><strong>สถานะ:</strong> รับเรื่องแล้ว</p>
+          <p><strong>ชื่อ - สกุล:</strong> ${field["คำนำหน้าหรือยศ"+"ชื่อ"+"สกุล"] || "-"}</p>
+          <p><strong>สถานะ:</strong> ${field["สถานะ"] || "-"}</p>
         </div>
       </div>
 
