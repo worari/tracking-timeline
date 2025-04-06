@@ -47,7 +47,7 @@ function drawTimeline(data) {
     const docNoOut = entry[11] || "ไม่ระบุ";
     const toDept = entry[12] || "ไม่ระบุ";
     const result = entry[13] || "ไม่ระบุ";
-    const name = entry[2] || "ไม่ทราบชื่อ";
+    const name = entry[8] || "ไม่ทราบชื่อ";
 
     const html = `
       <div class="card">
