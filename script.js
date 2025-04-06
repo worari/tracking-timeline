@@ -127,4 +127,21 @@ function drawTimeline(data) {
   // 🔊 พูดเมื่อโหลดสำเร็จ
   speak("พบข้อมูลแล้ว กรุณาตรวจสอบ");
 }
+function downloadPDF() {
+  const element = document.getElementById("timelineContent");
+  if (!element) {
+    alert("กรุณาค้นหาก่อนดาวน์โหลด");
+    return;
+  }
+
+  const opt = {
+    margin:       0.5,
+    filename:     'timeline.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2 },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+  };
+
+  html2pdf().set(opt).from(element).save();
+}
 
