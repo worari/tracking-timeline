@@ -36,37 +36,52 @@ function loadData() {
     });
 }
 
-function drawTimeline(data, headers) {
+function drawTimeline(data) {
   const container = document.getElementById("timeline");
-  container.innerHTML = "";
+  container.innerHTML = ""; // เคลียร์ข้อมูลเก่า
 
-  data.forEach(row => {
-    const field = {};
-    headers.forEach((key, i) => {
-      field[key.trim()] = row[i] || "";
-    });
+  const timeline = document.createElement("div");
+  timeline.className = "timeline";
 
-    const html = `
-      <div class="card mb-3">
-        <div class="card-body">
-          <h5 class="text-primary">📥 วันที่รับเรื่อง: ${field["วันที่หนังสือเข้า"] || "-"}</h5>
-          <p><strong>หน่วยเจ้าของเรื่อง:</strong> ${field["หน่วยเจ้าของเรื่อง"] || "-"}</p>
-          <p><strong>เลขหนังสือเข้า:</strong> ${field["เลขหนังสือเข้า"] || "-"}</p>
-          <p><strong>ชื่อ - นามสกุล:</strong> ${field["คำนำหน้าหรือยศ"], ["ชื่อ"], ["สกุล"] || "-"}</p>
-          <p><strong>สถานะ:</strong> ${field["สถานะ"] || "-"}</p>
+  data.forEach((entry, index) => {
+    const dateIn = entry[7] || "ไม่ระบุ";
+    const office = entry[4] || "ไม่ระบุหน่วยงาน";
+    const bookNoIn = entry[5] || "ไม่ระบุเลขหนังสือ";
+    const status = entry[8] || "สถานะไม่ระบุ";
+    const result = entry[10] || "-";
+    const bookOutDate = entry[12] || "-";
+    const bookOutNo = entry[13] || "-";
+    const sendTo = entry[14] || "-";
+
+    const item = `
+      <div class="timeline-item mb-4">
+        <div class="d-flex align-items-center mb-2">
+          <div class="timeline-icon bg-primary text-white rounded-circle me-3">
+            <i class="bi bi-file-earmark-arrow-down-fill"></i>
+          </div>
+          <h5 class="mb-0">📥 วันที่รับเรื่อง: ${dateIn}</h5>
         </div>
-      </div>
+        <p class="mb-1">หน่วยงาน: ${office}</p>
+        <p class="mb-1">เลขหนังสือเข้า: ${bookNoIn}</p>
+        <p class="mb-1"><strong>สถานะ:</strong> ${status}</p>
 
-      <div class="card mb-3">
-        <div class="card-body">
-          <h5 class="text-success">📤 วันที่ตอบหนังสือ: ${field["วันที่หนังสือออก"] || "-"}</h5>
-          <p><strong>เลขหนังสือ:</strong> ${field["เลขหนังสือ"] || "-"}</p>
-          <p><strong>ส่งเรื่องให้หน่วย:</strong> ${field["ส่งเรื่องให้หน่วย"] || "-"}</p>
-          <p><strong>ผลพิจารณา:</strong> ${field["ผลพิจารณา"] || "-"}</p>
+        <div class="d-flex align-items-center mt-3 mb-2">
+          <div class="timeline-icon bg-success text-white rounded-circle me-3">
+            <i class="bi bi-check2-circle"></i>
+          </div>
+          <h5 class="mb-0">📤 วันที่หนังสือออก: ${bookOutDate}</h5>
         </div>
+        <p class="mb-1">เลขหนังสือออก: ${bookOutNo}</p>
+        <p class="mb-1">ส่งให้หน่วย: ${sendTo}</p>
+        <p class="mb-2"><strong>ผลพิจารณา:</strong> ${result}</p>
+
+        <hr>
       </div>
     `;
 
-    container.innerHTML += html;
+    timeline.innerHTML += item;
   });
+
+  container.appendChild(timeline);
 }
+
