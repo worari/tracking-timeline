@@ -106,7 +106,7 @@ function drawTimeline(data) {
     container.innerHTML += html;
 
     // เรียกเสียงพูดชื่อผู้ใช้ (ภาษาไทย)
-    speakThai("ยินดีด้วยคุณ" + fname + " " + lname + "ได้รับรองเวลาราชการตอนเป็นทหารแล้ว");
+    speakThai("ยินดีด้วยคุณ" + fname + " " + lname + "ได้รับการรับรองเวลาราชการตอนเป็นทหารแล้ว");
   });
 }
 
